@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Credit Card Toolkit — Single‑File</title>
+  <!-- Tailwind CSS via CDN (no build step) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Optional: hide scrollbar for tab row overflow */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+  <div id="root"></div>
+
+  <!-- React 18 + ReactDOM UMD -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel so we can write JSX right in this file -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- App Code -->
+  <script type="text/babel">
+    const { useMemo, useState, useEffect } = React;
+
+    /**
+     * Credit Card Toolkit — All‑in‑one HTML (no build tools)
+     * ------------------------------------------------------
+     * What you get:
+     * - Cards manager (add/edit/delete) using cardFullId (e.g., AENPRPV)
+     * - Promos manager (promos reference cards by cardFullId)
+     * - Ranking view: Local HKD / CBF / FCY, with Net After Fees toggle
+     * - Import/Export JSON to backup/restore { cards: [], promos: [] }
+     * - Light/Dark theme toggle
+     *
+     * Storage: localStorage only. All numbers are plain percentages (e.g., 2.5 means 2.5%).
+     */
+
+    /** -----------------------------
+     * Starter Data (edit freely)
+     * ------------------------------*/
+    const STARTER_CARDS = [
+      { cardFullId: "AENPRPV", name: "AEON Purple Visa", issuer: "AEON", network: "Visa", fxFeePercent: 1.95, cbfFeePercent: 1.0, annualFee: 0, notes: "" },
+      { cardFullId: "AENPRPM", name: "AEON Purple Mastercard", issuer: "AEON", network: "Mastercard", fxFeePercent: 1.95, cbfFeePercent: 1.0, annualFee: 0, notes: "" },
+      { cardFullId: "AENPRPJ", name: "AEON Purple JCB", issuer: "AEON", network: "JCB", fxFeePercent: 1.95, cbfFeePercent: 1.0, annualFee: 0, notes: "" },
+      { cardFullId: "AENPRPU", name: "AEON Purple UnionPay", issuer: "AEON", network: "UnionPay", fxFeePercent: 1.95, cbfFeePercent: 1.0, annualFee: 0, notes: "" },
+    ];
+
+    const STARTER_PROMOS = [
+      {
+        id: "AEON-PURPLE-EAT",
+        cards: ["AENPRPV", "AENPRPM", "AENPRPJ", "AENPRPU"],
+        issuer: "AEON",
+        rebatePercentGross: 4.0,
+        capText: "Bonus points cap shared across Eat/Live/Ride (verify).",
+        period: "Calendar month",
+        categories: ["Dining"],
+        requiresRegistration: false,
+        spendRequirement: "",
+        notes: "Placeholders only. Verify with official T&C.",
+        validUntil: "Ongoing",
+        applies: { currency: ["HKD"], cbfEligible: true }
+      },
+      {
+        id: "AEON-WAKU-ONLINE",
+        cards: [],
+        issuer: "AEON",
+        rebatePercentGross: 6.0,
+        capText: "Cap HK$200 extra per statement cycle (verify).",
+        period: "Statement cycle",
+        categories: ["Online"],
+        requiresRegistration: false,
+        spendRequirement: "",
+        notes: "Placeholder only.",
+        validUntil: "Ongoing",
+        applies: { currency: ["HKD"] }
+      }
+    ];
+
+    /** -----------------------------
+     * Utilities & Hooks
+     * ------------------------------*/
+    const STORAGE_KEY = "ccp.singlefile.v1";
+    const cx = (...xs) => xs.filter(Boolean).join(" ");
+
+    function useLocalState() {
+      const [state, setState] = useState(() => {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : { cards: STARTER_CARDS, promos: STARTER_PROMOS };
+        } catch (_) {
+          return { cards: STARTER_CARDS, promos: STARTER_PROMOS };
+        }
+      });
+      useEffect(() => {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+      }, [state]);
+      return [state, setState];
+    }
+
+    function exportJson(state) {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cc-toolkit-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function parseNumber(n, fallback = 0) {
+      const v = Number(n);
+      return Number.isFinite(v) ? v : fallback;
+    }
+
+    /** -----------------------------
+     * Shared UI bits
+     * ------------------------------*/
+    function TextInput({ label, value, onChange, placeholder = "", type = "text", className = "" }) {
+      return (
+        <label className={cx("block text-sm", className)}>
+          <span className="text-gray-700">{label}</span>
+          <input
+            type={type}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="mt-1 w-full px-3 py-2 rounded-xl border border-gray-300 bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </label>
+      );
+    }
+    const NumberInput = (props) => <TextInput {...props} type="number" />;
+
+    const Toggle = ({ label, checked, onChange }) => (
+      <label className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-xl border border-gray-300">
+        <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} /> {label}
+      </label>
+    );
+
+    const Pill = ({ active, children, onClick }) => (
+      <button
+        onClick={onClick}
+        className={cx(
+          "px-3 py-1.5 rounded-2xl border text-sm whitespace-nowrap",
+          active ? "bg-indigo-600 text-white border-indigo-600" : "border-gray-300"
+        )}
+      >
+        {children}
+      </button>
+    );
+
+    /** -----------------------------
+     * Net calc helpers
+     * ------------------------------*/
+    const CONTEXTS = [
+      { key: "HKD", label: "Local HKD" },
+      { key: "CBF", label: "HKD Cross-Border" },
+      { key: "FCY", label: "Foreign Currency" },
+    ];
+
+    function effectiveFees(card, context, override) {
+      const fx = (override && override.overrideFees && override.overrideFees.fxPercent) ?? card.fxFeePercent ?? 0;
+      const cbf = (override && override.overrideFees && override.overrideFees.cbfPercent) ?? card.cbfFeePercent ?? 0;
+      if (context === "FCY") return fx;
+      if (context === "CBF") return cbf;
+      return 0;
+    }
+    const netPercent = (gross, fee) => Math.max(0, (gross ?? 0) - (fee ?? 0));
+
+    /** -----------------------------
+     * Cards Manager
+     * ------------------------------*/
+    function CardsManager({ cards, setCards }) {
+      const [draft, setDraft] = useState({ cardFullId: "", name: "", issuer: "", network: "", fxFeePercent: 0, cbfFeePercent: 0, annualFee: 0, notes: "" });
+      const [editingId, setEditingId] = useState(null);
+
+      function reset(){ setDraft({ cardFullId: "", name: "", issuer: "", network: "", fxFeePercent: 0, cbfFeePercent: 0, annualFee: 0, notes: "" }); setEditingId(null); }
+      function save(){
+        const id = draft.cardFullId.trim();
+        if(!id) return alert("cardFullId is required");
+        const entry = { ...draft, cardFullId: id, name: draft.name.trim() || id, fxFeePercent: parseNumber(draft.fxFeePercent), cbfFeePercent: parseNumber(draft.cbfFeePercent), annualFee: parseNumber(draft.annualFee) };
+        if (editingId){ setCards(cards.map(c=>c.cardFullId===editingId? entry : c)); }
+        else { if (cards.some(c=>c.cardFullId===id)) return alert("Duplicate cardFullId"); setCards([...cards, entry]); }
+        reset();
+      }
+      const edit = (c)=>{ setDraft(c); setEditingId(c.cardFullId); };
+      const remove = (id)=>{ if(confirm("Delete this card?")) setCards(cards.filter(c=>c.cardFullId!==id)); };
+
+      return (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <TextInput label="cardFullId" value={draft.cardFullId} onChange={(v)=>setDraft({...draft, cardFullId:v})} placeholder="AENPRPV" />
+            <TextInput label="Name" value={draft.name} onChange={(v)=>setDraft({...draft, name:v})} placeholder="AEON Purple Visa" />
+            <TextInput label="Issuer" value={draft.issuer} onChange={(v)=>setDraft({...draft, issuer:v})} placeholder="AEON" />
+            <TextInput label="Network" value={draft.network} onChange={(v)=>setDraft({...draft, network:v})} placeholder="Visa" />
+            <NumberInput label="FX Fee %" value={draft.fxFeePercent} onChange={(v)=>setDraft({...draft, fxFeePercent:v})} />
+            <NumberInput label="CBF Fee %" value={draft.cbfFeePercent} onChange={(v)=>setDraft({...draft, cbfFeePercent:v})} />
+            <NumberInput label="Annual Fee (HKD)" value={draft.annualFee} onChange={(v)=>setDraft({...draft, annualFee:v})} />
+            <TextInput label="Notes" value={draft.notes} onChange={(v)=>setDraft({...draft, notes:v})} className="md:col-span-3" />
+          </div>
+          <div className="flex gap-2">
+            <button onClick={save} className="px-3 py-2 rounded-xl border border-gray-300">{editingId?"Update Card":"Add Card"}</button>
+            {editingId && <button onClick={reset} className="px-3 py-2 rounded-xl border border-gray-300">Cancel</button>}
+          </div>
+
+          <div className="mt-4 space-y-2">
+            {cards.length===0? (<div className="text-sm text-gray-500">No cards yet.</div>) : (
+              cards.slice().sort((a,b)=>a.cardFullId.localeCompare(b.cardFullId)).map(c => (
+                <div key={c.cardFullId} className="grid grid-cols-12 gap-3 items-start p-3 rounded-2xl border border-gray-200">
+                  <div className="col-span-2 font-mono text-sm">{c.cardFullId}</div>
+                  <div className="col-span-3"><div className="font-medium">{c.name}</div><div className="text-xs text-gray-500">{c.issuer} · {c.network}</div></div>
+                  <div className="col-span-3 text-sm">FX {c.fxFeePercent}% · CBF {c.cbfFeePercent}% · AF ${c.annualFee}</div>
+                  <div className="col-span-3 text-sm text-gray-600">{c.notes}</div>
+                  <div className="col-span-1 flex gap-2 justify-end">
+                    <button onClick={()=>edit(c)} className="px-2 py-1 rounded-lg border">Edit</button>
+                    <button onClick={()=>remove(c.cardFullId)} className="px-2 py-1 rounded-lg border">Del</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    /** -----------------------------
+     * Promos Manager
+     * ------------------------------*/
+    function PromosManager({ promos, setPromos, cards }) {
+      const [draft, setDraft] = useState({ id: "", cards: [], issuer: "", rebatePercentGross: 0, capText: "", period: "Calendar month", categories: [], requiresRegistration: false, spendRequirement: "", notes: "", validUntil: "Ongoing" });
+      const [editingId, setEditingId] = useState(null);
+      const [cardPicker, setCardPicker] = useState("");
+      const [tag, setTag] = useState("");
+
+      function reset(){ setDraft({ id: "", cards: [], issuer: "", rebatePercentGross: 0, capText: "", period: "Calendar month", categories: [], requiresRegistration: false, spendRequirement: "", notes: "", validUntil: "Ongoing" }); setEditingId(null); setCardPicker(""); setTag(""); }
+      function save(){
+        const id = draft.id.trim();
+        if(!id) return alert("Promo id is required");
+        const entry = { ...draft, id, rebatePercentGross: parseNumber(draft.rebatePercentGross), cards: [...new Set(draft.cards)], categories: (draft.categories||[]).filter(Boolean) };
+        if (editingId){ setPromos(promos.map(p=>p.id===editingId? entry : p)); }
+        else { if(promos.some(p=>p.id===id)) return alert("Duplicate promo id"); setPromos([entry, ...promos]); }
+        reset();
+      }
+      const edit = (p)=>{ setDraft(p); setEditingId(p.id); };
+      const remove = (id)=>{ if(confirm("Delete this promo?")) setPromos(promos.filter(p=>p.id!==id)); };
+      const addCardId = ()=>{ const v = cardPicker.trim(); if(!v) return; setDraft({ ...draft, cards: [...new Set([...(draft.cards||[]), v])] }); setCardPicker(""); };
+      const addTag = ()=>{ const v = tag.trim(); if(!v) return; setDraft({ ...draft, categories: [...new Set([...(draft.categories||[]), v])] }); setTag(""); };
+
+      const cardIdOptions = useMemo(()=> cards.map(c=>c.cardFullId).sort(), [cards]);
+
+      return (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <TextInput label="Promo ID" value={draft.id} onChange={(v)=>setDraft({...draft, id:v})} placeholder="AEON-PURPLE-EAT" />
+            <TextInput label="Issuer" value={draft.issuer} onChange={(v)=>setDraft({...draft, issuer:v})} placeholder="AEON" />
+            <NumberInput label="Rebate % (Gross)" value={draft.rebatePercentGross} onChange={(v)=>setDraft({...draft, rebatePercentGross:v})} />
+            <TextInput label="Cap Text" value={draft.capText} onChange={(v)=>setDraft({...draft, capText:v})} placeholder="Cap HK$200 extra / stmt" className="md:col-span-2" />
+            <TextInput label="Period" value={draft.period} onChange={(v)=>setDraft({...draft, period:v})} placeholder="Calendar month" />
+            <TextInput label="Spend Requirement" value={draft.spendRequirement} onChange={(v)=>setDraft({...draft, spendRequirement:v})} className="md:col-span-3" />
+            <TextInput label="Notes" value={draft.notes} onChange={(v)=>setDraft({...draft, notes:v})} className="md:col-span-3" />
+            <TextInput label="Valid Until" value={draft.validUntil} onChange={(v)=>setDraft({...draft, validUntil:v})} placeholder="YYYY-MM-DD or Ongoing" />
+            <div className="md:col-span-2 flex items-end gap-2">
+              <TextInput label="Add Card ID (cardFullId)" value={cardPicker} onChange={setCardPicker} placeholder="AENPRPV" />
+              <button onClick={addCardId} className="h-10 px-3 py-2 rounded-xl border border-gray-300">Add</button>
+            </div>
+            <div className="md:col-span-1 flex items-end gap-2">
+              <TextInput label="Add Category" value={tag} onChange={setTag} placeholder="Dining / Online / FCY / CBF / Mobile Payment / Transport / General" />
+              <button onClick={addTag} className="h-10 px-3 py-2 rounded-xl border border-gray-300">Add</button>
+            </div>
+            <div className="md:col-span-3 flex items-center gap-3">
+              <Toggle label="Registration required" checked={draft.requiresRegistration} onChange={(v)=>setDraft({...draft, requiresRegistration:v})} />
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <button onClick={save} className="px-3 py-2 rounded-xl border border-gray-300">{editingId?"Update Promo":"Add Promo"}</button>
+            {editingId && <button onClick={reset} className="px-3 py-2 rounded-xl border border-gray-300">Cancel</button>}
+          </div>
+
+          <div className="mt-4 space-y-2">
+            {promos.length===0? (<div className="text-sm text-gray-500">No promos yet.</div>) : (
+              promos.map(p => (
+                <div key={p.id} className="p-3 rounded-2xl border border-gray-200">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="font-medium">{p.id}</div>
+                    <div className="text-xs text-gray-500">{p.issuer}</div>
+                    <div className="ml-auto text-sm">Gross {p.rebatePercentGross}%</div>
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">{p.capText} · {p.period} · Valid {p.validUntil}</div>
+                  <div className="text-xs text-gray-600 mt-1">Cards: { (p.cards||[]).join(", ") || "—" }</div>
+                  <div className="mt-1 flex flex-wrap gap-1">{(p.categories||[]).map(c => (<span key={c} className="inline-flex items-center rounded-full px-2 py-0.5 text-xs border">{c}</span>))}</div>
+                  <div className="mt-2 text-xs">{p.requiresRegistration?"Registration required":"No registration"} · {p.spendRequirement}</div>
+                  <div className="mt-1 text-xs text-gray-500">{p.notes}</div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    /** -----------------------------
+     * Ranking
+     * ------------------------------*/
+    function Ranking({ state }) {
+      const [activeTab, setActiveTab] = useState("All");
+      const [context, setContext] = useState("HKD");
+      const [q, setQ] = useState("");
+      const [showNet, setShowNet] = useState(true);
+
+      const categories = useMemo(() => {
+        const s = new Set();
+        state.promos.forEach(p => (p.categories||[]).forEach(c => s.add(c)));
+        return ["All", ...Array.from(s).sort()];
+      }, [state.promos]);
+
+      const cardMap = useMemo(() => Object.fromEntries(state.cards.map(c => [c.cardFullId, c])), [state.cards]);
+
+      const rows = useMemo(() => {
+        const list = [];
+        for (const p of state.promos) {
+          if (activeTab !== "All" && !(p.categories||[]).includes(activeTab)) continue;
+          const hay = `${p.id} ${p.issuer} ${(p.categories||[]).join(" ")} ${p.capText} ${p.notes}`.toLowerCase();
+          if (q && !hay.includes(q.toLowerCase())) continue;
+
+          const cardIds = p.cards && p.cards.length ? p.cards : Object.keys(cardMap);
+
+          if (showNet) {
+            for (const cid of cardIds) {
+              const card = cardMap[cid];
+              if (!card) continue;
+              const gross = p.rebatePercentGross ?? 0;
+              const fee = effectiveFees(card, context, null);
+              const net = netPercent(gross, fee);
+              list.push({
+                kind: "card",
+                promoId: p.id,
+                cardFullId: cid,
+                cardName: card.name,
+                issuer: p.issuer || card.issuer,
+                context,
+                gross,
+                fee,
+                net,
+                capText: p.capText,
+                period: p.period,
+                categories: p.categories||[],
+                requiresRegistration: !!p.requiresRegistration,
+                validUntil: p.validUntil||"",
+              });
+            }
+          } else {
+            list.push({
+              kind: "promo",
+              promoId: p.id,
+              cardFullId: "",
+              cardName: "",
+              issuer: p.issuer,
+              context,
+              gross: p.rebatePercentGross ?? 0,
+              fee: 0,
+              net: p.rebatePercentGross ?? 0,
+              capText: p.capText,
+              period: p.period,
+              categories: p.categories||[],
+              requiresRegistration: !!p.requiresRegistration,
+              validUntil: p.validUntil||"",
+            });
+          }
+        }
+        return list.sort((a,b)=> (showNet ? b.net - a.net : b.gross - a.gross));
+      }, [state.promos, state.cards, activeTab, q, context, showNet, cardMap]);
+
+      return (
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Search promos/cards…" className="px-3 py-2 rounded-xl border border-gray-300 bg-white/60 text-sm" />
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              {categories.map(c => <Pill key={c} active={activeTab===c} onClick={()=>setActiveTab(c)}>{c}</Pill>)}
+            </div>
+            <div className="ml-auto flex gap-2 items-center">
+              <select value={context} onChange={(e)=>setContext(e.target.value)} className="px-3 py-2 rounded-xl border text-sm">
+                {CONTEXTS.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+              </select>
+              <Toggle label="Show net after fees" checked={showNet} onChange={setShowNet} />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {rows.length === 0 ? (
+              <div className="text-sm text-gray-500">No results.</div>
+            ) : rows.map((r, i) => (
+              <div key={`${r.kind}-${r.promoId}-${r.cardFullId}-${i}`} className="grid grid-cols-12 gap-3 items-start p-3 rounded-2xl border border-gray-200 hover:shadow-sm">
+                <div className="col-span-1 text-sm text-gray-500">#{i+1}</div>
+                <div className="col-span-3">
+                  <div className="font-medium">{r.kind === "card" ? r.cardName : r.promoId}</div>
+                  <div className="text-xs text-gray-500">{r.issuer}</div>
+                  {r.kind === "card" && <div className="text-xs text-gray-500 font-mono">{r.cardFullId}</div>}
+                  <div className="mt-1 flex gap-1 flex-wrap text-xs">{r.categories.map(c => (<span key={c} className="inline-flex items-center rounded-full px-2 py-0.5 border">{c}</span>))}</div>
+                </div>
+                <div className="col-span-2">
+                  <div className="text-xl font-semibold">{showNet ? `${r.net}%` : `${r.gross}%`}</div>
+                  <div className="text-xs text-gray-500">{showNet ? "Net after fees" : "Gross"} ({r.context})</div>
+                  {showNet && <div className="text-xs text-gray-500">Gross {r.gross}% − Fee {r.fee}%</div>}
+                </div>
+                <div className="col-span-4 text-sm">
+                  <div className="text-gray-900">{r.capText || "—"}</div>
+                  <div className="text-xs text-gray-500">Period: {r.period || "—"}</div>
+                  <div className="text-xs text-gray-500">Valid: {r.validUntil || "—"}</div>
+                </div>
+                <div className="col-span-2 text-xs">
+                  <div>{r.requiresRegistration ? "Registration required" : "No registration"}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    /** -----------------------------
+     * Main App
+     * ------------------------------*/
+    function App(){
+      const [state, setState] = useLocalState();
+      const [tab, setTab] = useState("Ranking");
+      const [dark, setDark] = useState(false);
+
+      useEffect(() => {
+        const root = document.documentElement;
+        if (dark) { root.classList.add("dark"); document.body.classList.add("bg-neutral-950", "text-neutral-100"); }
+        else { root.classList.remove("dark"); document.body.classList.remove("bg-neutral-950", "text-neutral-100"); }
+      }, [dark]);
+
+      function importJson(file){
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const json = JSON.parse(String(reader.result));
+            if (!json || typeof json !== "object" || !Array.isArray(json.cards) || !Array.isArray(json.promos)) {
+              throw new Error("JSON must be an object with { cards: [], promos: [] }");
+            }
+            setState({ cards: json.cards, promos: json.promos });
+          } catch (e) { alert("Import failed: " + (e && e.message ? e.message : e)); }
+        };
+        reader.readAsText(file);
+      }
+
+      return (
+        <div className="min-h-screen">
+          <header className="sticky top-0 z-10 backdrop-blur bg-white/80 dark:bg-neutral-950/70 border-b border-gray-200">
+            <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+              <div className="text-2xl font-semibold tracking-tight">Credit Card Toolkit</div>
+              <div className="ml-4 flex gap-2">
+                {["Ranking","Cards","Promos"].map(t => (
+                  <Pill key={t} active={tab===t} onClick={()=>setTab(t)}>{t}</Pill>
+                ))}
+              </div>
+              <div className="ml-auto flex items-center gap-2">
+                <button onClick={()=>exportJson(state)} className="px-3 py-2 rounded-xl border text-sm">Export JSON</button>
+                <label className="px-3 py-2 rounded-xl border text-sm cursor-pointer">Import JSON
+                  <input type="file" accept="application/json" className="hidden" onChange={(e)=> e.target.files && importJson(e.target.files[0])} />
+                </label>
+                <button onClick={()=>setDark(d=>!d)} className="px-3 py-2 rounded-xl border text-sm" title="Toggle light/dark">{dark?"🌙":"☀️"}</button>
+              </div>
+            </div>
+          </header>
+
+          <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+            <div className="text-sm text-gray-600 dark:text-gray-400">Enter your cards and promos, then use <strong>Ranking</strong> to compare. All data stays in your browser.</div>
+            {tab === "Cards" && <CardsManager cards={state.cards} setCards={(cards)=>setState(s=>({...s, cards}))} />}
+            {tab === "Promos" && <PromosManager promos={state.promos} setPromos={(promos)=>setState(s=>({...s, promos}))} cards={state.cards} />}
+            {tab === "Ranking" && <Ranking state={state} />}
+
+            <section className="mt-8 p-4 rounded-2xl border border-gray-200 bg-gray-50/60 dark:bg-neutral-900/40">
+              <h2 className="text-lg font-semibold mb-2">Tips</h2>
+              <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+                <li>cardFullId format (suggested): <code>Issuer(3)+Card(3)+Network(1)</code>, e.g. <code>AENPRPV</code>.</li>
+                <li>Promos reference cards by <code>cardFullId</code> and define a single <em>gross</em> rebate %. Ranking can show <em>net after fees</em>.</li>
+                <li>Use categories like <code>Dining</code>, <code>Online</code>, <code>Mobile Payment</code>, <code>Transport</code>, <code>FCY</code>, <code>CBF</code>, <code>General</code>.</li>
+                <li>Verify all numbers against official T&C before relying on rankings.</li>
+              </ul>
+            </section>
+          </main>
+
+          <footer className="max-w-6xl mx-auto px-4 py-10 text-xs text-gray-500">Built for quick comparison of Hong Kong credit card promotions. Verify all details with official T&C.</footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
