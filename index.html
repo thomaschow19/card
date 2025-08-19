@@ -36,7 +36,7 @@
                   var(--bg);
       color:var(--text);
     }
-    .wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
+    .wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
     .topbar{
       display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px
     }
@@ -48,6 +48,20 @@
       background:linear-gradient(0deg,rgba(255,255,255,.02),rgba(255,255,255,.02)),var(--card);
       color:var(--text); outline:none;
     }
+    .seg{display:inline-flex;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--badge-bg)}
+    .seg-btn{padding:8px 12px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px}
+    .seg-btn + .seg-btn{border-left:1px solid var(--border)}
+    .seg input[type=radio]{position:absolute;opacity:0;width:0;height:0}
+    .seg input[type=radio] + label.seg-btn{user-select:none}
+    .seg input[type=radio]:checked + label.seg-btn{
+      background:linear-gradient(0deg,rgba(255,255,255,.06),rgba(255,255,255,.06)),var(--card);
+      font-weight:600;
+      color:var(--text);
+    }
+    .seg-btn:active{transform:translateY(1px)}
+    /* Stronger selected state for segmented radios */
+    .seg input[type=radio]:focus + label.seg-btn{outline:none}
+    .seg-btn:hover{filter:brightness(1.05)}
     .filters{display:flex;flex-direction:column;gap:10px}
     .filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
     .select{min-width:260px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(0deg,rgba(255,255,255,.02),rgba(255,255,255,.02)),var(--card);color:var(--text);outline:none}
@@ -71,7 +85,7 @@
     .card[data-collapsed="true"] h2::after{transform:translateY(-50%) rotate(-90deg)}
     /* Hide card body when collapsed */
     .card[data-collapsed="true"] .inner, .card[data-collapsed="true"] .scroll{display:none}
-    .card .inner{padding:10px 12px}
+    .card .inner{padding:12px 16px}
     .scroll{max-height:55vh;overflow:auto;border-top:1px solid var(--border)}
     table{width:100%; border-collapse:separate; border-spacing:0; font-size:12.5px}
     thead th{
@@ -89,6 +103,39 @@
     .subtle{opacity:.85}
     .footer{margin-top:18px; text-align:right}
     .hint{font-size:12px;color:var(--muted)}
+    /* Overlay settings panel */
+    .overlay.hidden{display:none}
+    .overlay{position:fixed;inset:0;z-index:50}
+    .overlay-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+    .overlay-panel{position:relative;max-width:720px;margin:8vh auto;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+    .overlay-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+    .overlay-header h3{margin:0;font-size:16px}
+    .overlay-close{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;padding:6px 10px;cursor:pointer}
+    .overlay-body{padding:14px 16px}
+    #settings-form fieldset{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:10px 0}
+    #settings-form legend{padding:0 6px;font-size:12px;color:var(--muted)}
+    #settings-form .row{display:flex;justify-content:space-between;align-items:center;margin:6px 0;gap:10px}
+    #settings-form label{font-size:13px}
+    .overlay-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+    /* Card-row tables when in "cards" view (per-card) */
+    .card[data-view="cards"] .scroll{ max-height: none; overflow: visible; padding: 16px 14px; }
+    .card[data-view="cards"] table{ border-collapse: separate; }
+    .card[data-view="cards"] thead{ display:none; }
+    .card[data-view="cards"] tbody{ display:block; }
+    .card[data-view="cards"] tbody tr{ display:block; width:100%; margin:16px 0; background:var(--row); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .card[data-view="cards"] .scroll tbody tr:first-child{ margin-top: 4px; }
+    .card[data-view="cards"] .scroll tbody tr:last-child{ margin-bottom: 4px; }
+    .card[data-view="cards"] tbody td{ display:flex; align-items:flex-start; gap:8px; padding:12px 14px; border-bottom:1px dashed var(--border); }
+    .card[data-view="cards"] tbody td:last-child{ border-bottom:none; }
+    .card[data-view="cards"] tbody td::before{ content: attr(data-label); flex: 0 0 40%; max-width: 45%; color:var(--muted); font-weight:600; }
+    .card[data-view="cards"] tbody td > *{ flex:1 1 auto; }
+    /* Modern switch for Start collapsed */
+    .switch{display:inline-flex;align-items:center;position:relative}
+    .switch input{position:absolute;opacity:0;width:0;height:0}
+    .switch .switch-ui{width:42px;height:24px;border-radius:999px;background:var(--badge-bg);border:1px solid var(--badge-br);display:inline-block;position:relative;transition:background .2s,border-color .2s}
+    .switch .switch-ui::after{content:"";position:absolute;top:50%;left:2px;width:18px;height:18px;border-radius:50%;background:var(--card);border:1px solid var(--border);transform:translateY(-50%);transition:left .2s}
+    .switch input:checked + .switch-ui{background:linear-gradient(0deg,rgba(124,156,255,.25),rgba(124,156,255,.25)),var(--badge-bg);border-color:var(--accent)}
+    .switch input:checked + .switch-ui::after{left:calc(100% - 20px)}
   </style>
 </head>
 <body>
@@ -96,22 +143,23 @@
     <div class="topbar">
       <div class="title">JSON Viewer</div>
       <input id="q" class="search" placeholder="Search cards & promotions…" />
+      <button id="btn-settings" class="btn-clear" type="button" aria-haspopup="dialog" aria-controls="settings-overlay">Settings</button>
     </div>
     <div class="muted" style="margin-bottom:14px">Loads <code>issuer.json</code>, <code>card.json</code>, and <code>promotion.json</code> from this folder.</div>
 
     <div class="grid">
-      <div class="card" data-collapsed="true">
+      <div id="card-issuers" class="card" data-collapsed="true" data-view="cards">
         <h2>Issuers <span id="issuer-count" class="muted"></span></h2>
         <div class="scroll"><table id="tbl-issuers"></table></div>
       </div>
 
-      <div class="card" data-collapsed="true">
+      <div id="card-cards" class="card" data-collapsed="true" data-view="cards">
         <h2>Cards <span id="card-count" class="muted"></span></h2>
         <div class="inner hint">Showing fields as columns; arrays render as badges.</div>
         <div class="scroll"><table id="tbl-cards"></table></div>
       </div>
 
-      <div class="card">
+      <div id="card-promos" class="card" data-view="cards">
         <h2>Promotions <span id="promo-count" class="muted"></span></h2>
         <div class="inner filters">
           <div class="filter-row">
@@ -132,10 +180,137 @@
       </div>
     </div>
 
+    <div id="settings-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="overlay-backdrop" data-close></div>
+      <div class="overlay-panel">
+        <div class="overlay-header">
+          <h3 id="settings-title">Table Settings</h3>
+          <button class="overlay-close" type="button" data-close aria-label="Close">×</button>
+        </div>
+        <div class="overlay-body">
+          <form id="settings-form">
+            <fieldset>
+              <legend>Issuers</legend>
+              <label class="row"><span>View</span>
+                <div class="seg">
+                  <input type="radio" id="issuers-view-cards" name="issuers-view" value="cards">
+                  <label class="seg-btn" for="issuers-view-cards">Card view</label>
+                  <input type="radio" id="issuers-view-table" name="issuers-view" value="table">
+                  <label class="seg-btn" for="issuers-view-table">Table view</label>
+                </div>
+              </label>
+              <label class="row"><span>Start collapsed</span>
+                <label class="switch"><input type="checkbox" name="issuers-collapsed"><span class="switch-ui"></span></label>
+              </label>
+            </fieldset>
+            <fieldset>
+              <legend>Cards</legend>
+              <label class="row"><span>View</span>
+                <div class="seg">
+                  <input type="radio" id="cards-view-cards" name="cards-view" value="cards">
+                  <label class="seg-btn" for="cards-view-cards">Card view</label>
+                  <input type="radio" id="cards-view-table" name="cards-view" value="table">
+                  <label class="seg-btn" for="cards-view-table">Table view</label>
+                </div>
+              </label>
+              <label class="row"><span>Start collapsed</span>
+                <label class="switch"><input type="checkbox" name="cards-collapsed"><span class="switch-ui"></span></label>
+              </label>
+            </fieldset>
+            <fieldset>
+              <legend>Promotions</legend>
+              <label class="row"><span>View</span>
+                <div class="seg">
+                  <input type="radio" id="promos-view-cards" name="promos-view" value="cards">
+                  <label class="seg-btn" for="promos-view-cards">Card view</label>
+                  <input type="radio" id="promos-view-table" name="promos-view" value="table">
+                  <label class="seg-btn" for="promos-view-table">Table view</label>
+                </div>
+              </label>
+              <label class="row"><span>Start collapsed</span>
+                <label class="switch"><input type="checkbox" name="promos-collapsed"><span class="switch-ui"></span></label>
+              </label>
+            </fieldset>
+            <div class="overlay-actions">
+              <button type="button" class="btn-clear" data-close>Cancel</button>
+              <button type="submit" class="btn-clear">Apply</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <div class="footer muted" id="meta"></div>
   </div>
 
   <script>
+    // Settings overlay logic + persistence
+    const overlay = document.getElementById('settings-overlay');
+    const form = document.getElementById('settings-form');
+    function openSettings(){ overlay.classList.remove('hidden'); }
+    function closeSettings(){ overlay.classList.add('hidden'); }
+    function loadPersisted(){
+      return {
+        view: {
+          issuers: localStorage.getItem('view.issuers') || null,
+          cards:   localStorage.getItem('view.cards')   || null,
+          promos:  localStorage.getItem('view.promos')  || null,
+          global:  localStorage.getItem('view.global')  || 'cards'
+        },
+        collapsed: {
+          issuers: localStorage.getItem('collapsed.issuers'),
+          cards:   localStorage.getItem('collapsed.cards'),
+          promos:  localStorage.getItem('collapsed.promos')
+        }
+      };
+    }
+    function applyPersisted(p){
+      const issuers = document.getElementById('card-issuers');
+      const cards   = document.getElementById('card-cards');
+      const promos  = document.getElementById('card-promos');
+      const gv = p.view.global || 'cards';
+      issuers.setAttribute('data-view', p.view.issuers || gv);
+      cards.setAttribute('data-view',   p.view.cards   || gv);
+      promos.setAttribute('data-view',  p.view.promos  || gv);
+      if(p.collapsed.issuers !== null) issuers.setAttribute('data-collapsed', p.collapsed.issuers === 'true' ? 'true':'false');
+      if(p.collapsed.cards   !== null) cards.setAttribute('data-collapsed',   p.collapsed.cards   === 'true' ? 'true':'false');
+      if(p.collapsed.promos  !== null) promos.setAttribute('data-collapsed',  p.collapsed.promos  === 'true' ? 'true':'false');
+    }
+    function syncSettingsForm(){
+      const issuers = document.getElementById('card-issuers');
+      const cards   = document.getElementById('card-cards');
+      const promos  = document.getElementById('card-promos');
+      const iv = issuers.getAttribute('data-view') || 'cards';
+      const cv = cards.getAttribute('data-view')   || 'cards';
+      const pv = promos.getAttribute('data-view')  || 'cards';
+      form.querySelectorAll('input[name="issuers-view"]').forEach(r=> r.checked = (r.value === iv));
+      form.querySelectorAll('input[name="cards-view"]').forEach(r  => r.checked = (r.value === cv));
+      form.querySelectorAll('input[name="promos-view"]').forEach(r => r.checked = (r.value === pv));
+      form.elements['issuers-collapsed'].checked = (issuers.getAttribute('data-collapsed') === 'true');
+      form.elements['cards-collapsed'].checked   = (cards.getAttribute('data-collapsed')   === 'true');
+      form.elements['promos-collapsed'].checked  = (promos.getAttribute('data-collapsed')  === 'true');
+    }
+    function persistFromForm(){
+      const iv = form.querySelector('input[name="issuers-view"]:checked').value;
+      const cv = form.querySelector('input[name="cards-view"]:checked').value;
+      const pv = form.querySelector('input[name="promos-view"]:checked').value;
+      localStorage.setItem('view.issuers', iv);
+      localStorage.setItem('view.cards',   cv);
+      localStorage.setItem('view.promos',  pv);
+      localStorage.setItem('collapsed.issuers', String(form.elements['issuers-collapsed'].checked));
+      localStorage.setItem('collapsed.cards',   String(form.elements['cards-collapsed'].checked));
+      localStorage.setItem('collapsed.promos',  String(form.elements['promos-collapsed'].checked));
+    }
+    document.getElementById('btn-settings').addEventListener('click', ()=>{ syncSettingsForm(); openSettings(); });
+    overlay.addEventListener('click', (e)=>{ if(e.target.hasAttribute('data-close')) closeSettings(); });
+    document.getElementById('settings-form').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      persistFromForm();
+      applyPersisted(loadPersisted());
+      closeSettings();
+    });
+    // Apply persisted settings on first load
+    applyPersisted(loadPersisted());
+
     const state = { issuers: [], cards: [], promos: [], filteredCards: [], filteredPromos: [] };
     let cardIdToName = new Map();
 
@@ -206,14 +381,16 @@
           if (el.id === 'tbl-promos' && c === 'eligibleCards' && Array.isArray(v)) {
             v = v.map(id => cardIdToName.get(String(id)) || id);
           }
-          return `<td>${valueToHTML(v)}</td>`;
+          const label = escapeHTML(caps(c));
+          return `<td data-label="${label}">${valueToHTML(v)}</td>`;
         }).join("") + "</tr>";
       }).join("") + "</tbody>";
       el.innerHTML = thead + tbody;
     }
 
+    const HTML_ESC = {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"};
     function escapeHTML(s){
-      return s.replace(/[&<>"']/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[ch]));
+      return s.replace(/[&<>"']/g, ch => HTML_ESC[ch]);
     }
 
     function buildMerchantOptions(promos){
