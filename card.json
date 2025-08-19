@@ -1,0 +1,314 @@
+[
+  {
+    "cardID": "AENWAKM",
+    "cardName": "AEON Waku Waku",
+    "issuerID": "AEN",
+    "cardNetwork": "Mastercard",
+    "cardNetworkGrade": "Platunum 白金",
+    "cardType": "Credit",
+    "creditLimit": 10000,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Redeemable Cashback 需兌換現金回贈"
+  },
+  {
+    "cardID": "AENPRPJ",
+    "cardName": "AEON 紫卡 - JCB",
+    "issuerID": "AEN",
+    "cardNetwork": "JCB",
+    "cardNetworkGrade": "Platunum 白金",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Asia Miles 里數",
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "AENPRPM",
+    "cardName": "AEON 紫卡 - Mastercard",
+    "issuerID": "AEN",
+    "cardNetwork": "Mastercard",
+    "cardNetworkGrade": "Titanium 鈦金",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Asia Miles 里數",
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "AENPRPV",
+    "cardName": "AEON 紫卡 - Visa",
+    "issuerID": "AEN",
+    "cardNetwork": "Visa",
+    "cardNetworkGrade": "Platunum 白金",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Asia Miles 里數",
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "AENPRPU",
+    "cardName": "AEON 紫卡 - 銀聯",
+    "issuerID": "AEN",
+    "cardNetwork": "UnionPay",
+    "cardNetworkGrade": "Platunum 白金",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 0.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Asia Miles 里數",
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "AMXBLCA",
+    "cardName": "Amex Blue Cash",
+    "issuerID": "AMX",
+    "cardNetwork": "Amex",
+    "cardNetworkGrade": "Amex 美國運通",
+    "cardType": "Credit",
+    "creditLimit": 20100,
+    "annualFee": 980,
+    "annualFeeNotes": "上年度消費滿25k",
+    "ftf": 2.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Statement Credit 結單回贈"
+  },
+  {
+    "cardID": "AMXESSA",
+    "cardName": "Amex Essential",
+    "issuerID": "AMX",
+    "cardNetwork": "Amex",
+    "cardNetworkGrade": "Amex 美國運通",
+    "cardType": "Credit",
+    "creditLimit": 20100,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 2.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Asia Miles 里數",
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "AMXEXPA",
+    "cardName": "Amex Explorer",
+    "issuerID": "AMX",
+    "cardNetwork": "Amex",
+    "cardNetworkGrade": "Amex 美國運通",
+    "cardType": "Credit",
+    "creditLimit": 64800,
+    "annualFee": 2200,
+    "annualFeeNotes": "上年度消費滿150k",
+    "ftf": 2.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Asia Miles 里數",
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "CTBXCTV",
+    "cardName": "Citi Octopus Visa",
+    "issuerID": "CTB",
+    "cardNetwork": "Visa",
+    "cardNetworkGrade": "Platunum 白金",
+    "cardType": "Credit",
+    "creditLimit": 27000,
+    "annualFee": 1800,
+    "annualFeeNotes": "聯絡客戶服務",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Statement Credit 結單回贈"
+  },
+  {
+    "cardID": "MXXCREM",
+    "cardName": "Mox Credit",
+    "issuerID": "MXX",
+    "cardNetwork": "Mastercard",
+    "cardNetworkGrade": "World 世界",
+    "cardType": "Credit",
+    "creditLimit": 72000,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 1.95,
+    "cbf": 1.95,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Direct Deposit 直接存款"
+  },
+  {
+    "cardID": "STCAPTV",
+    "cardName": "SC A Point",
+    "issuerID": "STC",
+    "cardNetwork": "Visa",
+    "cardNetworkGrade": "Signature",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Points 積分"
+  },
+  {
+    "cardID": "STCCXPM",
+    "cardName": "SC Cathay - Priority Banking",
+    "issuerID": "STC",
+    "cardNetwork": "Mastercard",
+    "cardNetworkGrade": "World 世界",
+    "cardType": "Credit",
+    "creditLimit": 20000,
+    "annualFee": 4000,
+    "annualFeeNotes": "渣打優先理財（>1M結餘）",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Asia Miles 里數"
+    ],
+    "rebateMethod": "Asia Miles 里數"
+  },
+  {
+    "cardID": "STCSPCV",
+    "cardName": "SC Simply Cash",
+    "issuerID": "STC",
+    "cardNetwork": "Visa",
+    "cardNetworkGrade": "Signature",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 2000,
+    "annualFeeNotes": "渣打優先理財 / 出糧戶口",
+    "ftf": 1.95,
+    "cbf": 1.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Redeemable Cashback 需兌換現金回贈"
+  },
+  {
+    "cardID": "STCSMTV",
+    "cardName": "SC Smart",
+    "issuerID": "STC",
+    "cardNetwork": "Visa",
+    "cardNetworkGrade": "Signature",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 0,
+    "annualFeeNotes": "永久免年費",
+    "ftf": 0.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Redeemable Cashback 需兌換現金回贈"
+  },
+  {
+    "cardID": "UAFSCWM",
+    "cardName": "Sim Credit - World",
+    "issuerID": "UAF",
+    "cardNetwork": "Mastercard",
+    "cardNetworkGrade": "World 世界",
+    "cardType": "Credit",
+    "creditLimit": 30000,
+    "annualFee": 1800,
+    "annualFeeNotes": "聯絡客戶服務",
+    "ftf": 1.95,
+    "cbf": 1.95,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Statement Credit 結單回贈"
+  },
+  {
+    "cardID": "PRMEAMU",
+    "cardName": "EarnMORE - 銀聯",
+    "issuerID": "PRM",
+    "cardNetwork": "UnionPay",
+    "cardNetworkGrade": "Diamond 鑽石",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 1500,
+    "annualFeeNotes": "聯絡客戶服務",
+    "ftf": 1.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Statement Credit 結單回贈"
+  },
+  {
+    "cardID": "PRMWEDU",
+    "cardName": "WeWa - 銀聯",
+    "issuerID": "PRM",
+    "cardNetwork": "UnionPay",
+    "cardNetworkGrade": "Diamond 鑽石",
+    "cardType": "Credit",
+    "creditLimit": 0,
+    "annualFee": 1500,
+    "annualFeeNotes": "聯絡客戶服務",
+    "ftf": 1.0,
+    "cbf": 0.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Statement Credit 結單回贈"
+  },
+  {
+    "cardID": "PRMWEPV",
+    "cardName": "Wewa - Visa",
+    "issuerID": "PRM",
+    "cardNetwork": "Visa",
+    "cardNetworkGrade": "Platunum 白金",
+    "cardType": "Credit",
+    "creditLimit": 23000,
+    "annualFee": 1500,
+    "annualFeeNotes": "聯絡客戶服務",
+    "ftf": 1.95,
+    "cbf": 0.0,
+    "rebateType": [
+      "Cashback 現金回贈"
+    ],
+    "rebateMethod": "Statement Credit 結單回贈"
+  }
+]

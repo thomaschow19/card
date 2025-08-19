@@ -1,0 +1,90 @@
+[
+  {
+    "issuerID": "AEN",
+    "issuerName": "AEON",
+    "issuerType": "Lender 放債人",
+    "issuerSupportedCardType": [
+      "Credit Card 信用卡"
+    ],
+    "issuerSupportedNetwork": [
+      "JCB",
+      "Mastercard",
+      "UnionPay",
+      "Visa"
+    ]
+  },
+  {
+    "issuerID": "AMX",
+    "issuerName": "Amex 美國運通",
+    "issuerType": "Lender 放債人",
+    "issuerSupportedCardType": [
+      "Charge Card 簽帳卡",
+      "Credit Card 信用卡"
+    ],
+    "issuerSupportedNetwork": [
+      "American Express"
+    ]
+  },
+  {
+    "issuerID": "CTB",
+    "issuerName": "Citi 花旗",
+    "issuerType": "Bank 銀行",
+    "issuerSupportedCardType": [
+      "Credit Card 信用卡",
+      "Debit Card 扣帳卡"
+    ],
+    "issuerSupportedNetwork": [
+      "Mastercard",
+      "UnionPay",
+      "Visa"
+    ]
+  },
+  {
+    "issuerID": "MXX",
+    "issuerName": "Mox",
+    "issuerType": "Bank 銀行",
+    "issuerSupportedCardType": [
+      "Credit Card 信用卡",
+      "Debit Card 扣帳卡"
+    ],
+    "issuerSupportedNetwork": [
+      "Mastercard"
+    ]
+  },
+  {
+    "issuerID": "PRM",
+    "issuerName": "PrimeCredit 安信",
+    "issuerType": "Lender 放債人",
+    "issuerSupportedCardType": [
+      "Credit Card 信用卡"
+    ],
+    "issuerSupportedNetwork": [
+      "UnionPay",
+      "Visa"
+    ]
+  },
+  {
+    "issuerID": "STC",
+    "issuerName": "Standard Chartered 渣打",
+    "issuerType": "Bank 銀行",
+    "issuerSupportedCardType": [
+      "Credit Card 信用卡",
+      "Debit Card 扣帳卡"
+    ],
+    "issuerSupportedNetwork": [
+      "Mastercard",
+      "Visa"
+    ]
+  },
+  {
+    "issuerID": "UAF",
+    "issuerName": "UAF 亞洲聯合財務",
+    "issuerType": "Lender 放債人",
+    "issuerSupportedCardType": [
+      "Credit Card 信用卡"
+    ],
+    "issuerSupportedNetwork": [
+      "Mastercard"
+    ]
+  }
+]

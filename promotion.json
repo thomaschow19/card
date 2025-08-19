@@ -1,0 +1,486 @@
+[
+  {
+    "promotionID": "25GEN001",
+    "promotionName": "Wewa 手機支付 4%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣",
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Any Spending 任何消費"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "QR (Card App) 二維碼（卡App）"
+    ],
+    "rebatePercentageCashback": 4.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-07-01T00:00:00Z",
+    "EndDate": "2026-06-30T00:00:00Z",
+    "requirement": true,
+    "requirementDetail": "該曆月該卡累積滿 HK$1,500",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月每卡簽5556",
+    "rebateNotes": "Visa/銀聯上下限分開計",
+    "registrationNeeded": true
+  },
+  {
+    "promotionID": "25GEN002",
+    "promotionName": "sim World 網購 8%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣",
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上",
+    "merchantType": [
+      "Online Spending 網購"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 網上",
+      "網上"
+    ],
+    "rebatePercentageCashback": 8.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-07-01T00:00:00Z",
+    "EndDate": "2025-08-31T00:00:00Z",
+    "requirement": true,
+    "requirementDetail": "該筆網上交易需>500, 該月非網上累計簽夠1000",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月總上限簽2500",
+    "rebateNotes": "網購外幣共用上限，每筆網上交易需>500",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN003",
+    "promotionName": "sim World 外幣 8%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Physical 實體",
+    "merchantType": [
+      "Foreign Currency 外幣"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "實體卡"
+    ],
+    "rebatePercentageCashback": 8.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-07-01T00:00:00Z",
+    "EndDate": "2025-08-31T00:00:00Z",
+    "requirement": true,
+    "requirementDetail": "該月非網上累計簽夠1000",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月總上限簽2500",
+    "rebateNotes": "網購外幣共用上限，外幣無每筆下限",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN004",
+    "promotionName": "SC Smart 指定商戶 5%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Designated Merchants 指定商戶"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 5.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-01-01T00:00:00Z",
+    "EndDate": "2025-12-31T00:00:00Z",
+    "requirement": true,
+    "requirementDetail": "該結單總計簽夠4000",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月上限簽5000",
+    "rebateNotes": "4000要求包括所有smart卡簽帳",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN005",
+    "promotionName": "SC Simply Cash 1.5%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Any Spending 任何消費"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 1.5,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-01-01T00:00:00Z",
+    "EndDate": "2099-12-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": false,
+    "rebateLimitDetail": "無上限",
+    "rebateNotes": "AlipayHK都有回贈",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN006",
+    "promotionName": "Earnmore 保底 2%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣",
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Any Spending 任何消費"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 2.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-01-01T00:00:00Z",
+    "EndDate": "2025-12-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆年總上限簽150k",
+    "rebateNotes": "",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN007",
+    "promotionName": "Citi 八達通交通工具 15%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Physical 實體",
+    "merchantType": [
+      "Transport 交通"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "實體卡"
+    ],
+    "rebatePercentageCashback": 15.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-01-01T00:00:00Z",
+    "EndDate": "2025-12-31T00:00:00Z",
+    "requirement": true,
+    "requirementDetail": "該曆月所有citi卡累積滿4000",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月2000",
+    "rebateNotes": "只有用Citi八達通搭車才有回贈，惟簽帳要求不計算用八達通消費金額/自動增值金額",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN008",
+    "promotionName": "Amex Explorer 航空公司 / 網上旅行社 10.75x",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣",
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Designated Merchants 指定商戶",
+      "Travel 旅遊"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 4.9,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-07-03T00:00:00Z",
+    "EndDate": "2025-12-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆季上限簽10k",
+    "rebateNotes": "10.75xMR，以220MR=$1回贈計算，外幣上限分開計",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN009",
+    "promotionName": "Amex Explorer 外幣 10.75x",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Foreign Currency 外幣"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 4.9,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-07-03T00:00:00Z",
+    "EndDate": "2025-12-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆季上限簽10k等值外幣",
+    "rebateNotes": "10.75xMR，以220MR=$1回贈計算，2% FTF，航空公司 / 網上旅行社上限分開計",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN010",
+    "promotionName": "Amex Explorer 保底 3x",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Any Spending 任何消費"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 1.36,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-01-01T00:00:00Z",
+    "EndDate": "2099-12-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": false,
+    "rebateLimitDetail": "無上限",
+    "rebateNotes": "3xMR，以220MR=$1回贈計算",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN011",
+    "promotionName": "Amex Blue Cash 基本 1.2%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Any Spending 任何消費"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 1.2,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-01-01T00:00:00Z",
+    "EndDate": "2099-12-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": false,
+    "rebateLimitDetail": "無上限",
+    "rebateNotes": "結單直回",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN012",
+    "promotionName": "AEON紫卡 - 飲食手機支付 6%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Physical 實體",
+    "merchantType": [
+      "Dining 飲食"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "QR (Card App) 二維碼（卡App）"
+    ],
+    "rebatePercentageCashback": 6.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-03-10T00:00:00Z",
+    "EndDate": "2025-08-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月每類上限簽$1,786",
+    "rebateNotes": "每類上限所有紫卡合計，JCB不設手機支付",
+    "registrationNeeded": true
+  },
+  {
+    "promotionID": "25GEN013",
+    "promotionName": "AEON紫卡 - 交通手機支付 6%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Physical 實體",
+    "merchantType": [
+      "Transport 交通"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "QR (Card App) 二維碼（卡App）"
+    ],
+    "rebatePercentageCashback": 6.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-03-10T00:00:00Z",
+    "EndDate": "2025-08-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月每類上限簽$1,786",
+    "rebateNotes": "每類上限所有紫卡合計，JCB不設手機支付",
+    "registrationNeeded": true
+  },
+  {
+    "promotionID": "25GEN014",
+    "promotionName": "AEON紫卡 - AEON Store 手機支付 6%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Physical 實體",
+    "merchantType": [
+      "Designated Merchants 指定商戶"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "QR (Card App) 二維碼（卡App）"
+    ],
+    "rebatePercentageCashback": 6.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-03-10T00:00:00Z",
+    "EndDate": "2025-08-31T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每曆月每類上限簽$1,923",
+    "rebateNotes": "每類上限所有紫卡合計，JCB不設手機支付",
+    "registrationNeeded": true
+  },
+  {
+    "promotionID": "25GEN015",
+    "promotionName": "AEON Waku Waku 網購 6%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣",
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Online 網上",
+    "merchantType": [
+      "Online Spending 網購"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 網上",
+      "網上"
+    ],
+    "rebatePercentageCashback": 6.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-05-01T00:00:00Z",
+    "EndDate": "2026-02-28T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每結單$3571",
+    "rebateNotes": "3571以只作網上簽賬，回0.4+5.6%計算，每結單額外獎賞$200",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN016",
+    "promotionName": "AEON Waku Waku 本地餐飲 1%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Hong Kong Dollar 港幣"
+    ],
+    "designatedForeignCurrency": [],
+    "onlineOfflineRequirement": "Physical 實體",
+    "merchantType": [
+      "Dining 飲食"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "實體卡"
+    ],
+    "rebatePercentageCashback": 1.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-05-01T00:00:00Z",
+    "EndDate": "2026-02-28T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每結單額外獎賞$200",
+    "rebateNotes": "上限網購+本地餐飲+日本簽賬合計，不詳細計算上限",
+    "registrationNeeded": false
+  },
+  {
+    "promotionID": "25GEN017",
+    "promotionName": "AEON Waku Waku 日本簽賬 3%",
+    "eligibleCards": [],
+    "eligibleCurrency": [
+      "Foreign Currency 外幣"
+    ],
+    "designatedForeignCurrency": [
+      "Japanese Yen 日圓"
+    ],
+    "onlineOfflineRequirement": "Online 網上, Physical 實體",
+    "merchantType": [
+      "Foreign Currency 外幣"
+    ],
+    "eligiblePaymentMethod": [
+      "Apple Pay 實體",
+      "Apple Pay 網上",
+      "實體卡",
+      "網上"
+    ],
+    "rebatePercentageCashback": 3.0,
+    "rebateDollarPerMile": 0.0,
+    "BeginDate": "2025-05-01T00:00:00Z",
+    "EndDate": "2026-02-28T00:00:00Z",
+    "requirement": false,
+    "requirementDetail": "無優惠要求",
+    "rebateLimit": true,
+    "rebateLimitDetail": "每結單額外獎賞$200",
+    "rebateNotes": "上限網購+本地餐飲+日本簽賬合計，不詳細計算上限",
+    "registrationNeeded": false
+  }
+]
