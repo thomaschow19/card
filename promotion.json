@@ -2,7 +2,7 @@
   {
     "promotionID": "25GEN001",
     "promotionName": "Wewa 手機支付 4%",
-    "eligibleCards": [],
+    "eligibleCards": ["PRMWEPV","PRMWEDU"],
     "eligibleCurrency": [
       "Foreign Currency 外幣",
       "Hong Kong Dollar 港幣"
@@ -31,7 +31,7 @@
   {
     "promotionID": "25GEN002",
     "promotionName": "sim World 網購 8%",
-    "eligibleCards": [],
+    "eligibleCards": ["UAFSCWM"],
     "eligibleCurrency": [
       "Foreign Currency 外幣",
       "Hong Kong Dollar 港幣"
@@ -59,7 +59,7 @@
   {
     "promotionID": "25GEN003",
     "promotionName": "sim World 外幣 8%",
-    "eligibleCards": [],
+    "eligibleCards": ["UAFSCWM"],
     "eligibleCurrency": [
       "Foreign Currency 外幣"
     ],
@@ -86,7 +86,7 @@
   {
     "promotionID": "25GEN004",
     "promotionName": "SC Smart 指定商戶 5%",
-    "eligibleCards": [],
+    "eligibleCards": ["STCSMTV"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -115,7 +115,7 @@
   {
     "promotionID": "25GEN005",
     "promotionName": "SC Simply Cash 1.5%",
-    "eligibleCards": [],
+    "eligibleCards": ["STCSMCV"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -144,7 +144,7 @@
   {
     "promotionID": "25GEN006",
     "promotionName": "Earnmore 保底 2%",
-    "eligibleCards": [],
+    "eligibleCards": ["PRMEAMU"],
     "eligibleCurrency": [
       "Foreign Currency 外幣",
       "Hong Kong Dollar 港幣"
@@ -174,7 +174,7 @@
   {
     "promotionID": "25GEN007",
     "promotionName": "Citi 八達通交通工具 15%",
-    "eligibleCards": [],
+    "eligibleCards": ["CTBXCTV"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -201,7 +201,7 @@
   {
     "promotionID": "25GEN008",
     "promotionName": "Amex Explorer 航空公司 / 網上旅行社 10.75x",
-    "eligibleCards": [],
+    "eligibleCards": ["AMXEXPA"],
     "eligibleCurrency": [
       "Foreign Currency 外幣",
       "Hong Kong Dollar 港幣"
@@ -232,7 +232,7 @@
   {
     "promotionID": "25GEN009",
     "promotionName": "Amex Explorer 外幣 10.75x",
-    "eligibleCards": [],
+    "eligibleCards": ["AMXEXPA"],
     "eligibleCurrency": [
       "Foreign Currency 外幣"
     ],
@@ -261,7 +261,7 @@
   {
     "promotionID": "25GEN010",
     "promotionName": "Amex Explorer 保底 3x",
-    "eligibleCards": [],
+    "eligibleCards": ["AMXEXPA"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -290,7 +290,7 @@
   {
     "promotionID": "25GEN011",
     "promotionName": "Amex Blue Cash 基本 1.2%",
-    "eligibleCards": [],
+    "eligibleCards": ["AMXBLCA"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -319,7 +319,7 @@
   {
     "promotionID": "25GEN012",
     "promotionName": "AEON紫卡 - 飲食手機支付 6%",
-    "eligibleCards": [],
+    "eligibleCards": ["AENPRPV","AENPRPM","AENPRPU"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -346,7 +346,7 @@
   {
     "promotionID": "25GEN013",
     "promotionName": "AEON紫卡 - 交通手機支付 6%",
-    "eligibleCards": [],
+    "eligibleCards": ["AENPRPV","AENPRPM","AENPRPU"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -373,7 +373,7 @@
   {
     "promotionID": "25GEN014",
     "promotionName": "AEON紫卡 - AEON Store 手機支付 6%",
-    "eligibleCards": [],
+    "eligibleCards": ["AENPRPV","AENPRPM","AENPRPU"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -400,7 +400,7 @@
   {
     "promotionID": "25GEN015",
     "promotionName": "AEON Waku Waku 網購 6%",
-    "eligibleCards": [],
+    "eligibleCards": ["AENWAKM"],
     "eligibleCurrency": [
       "Foreign Currency 外幣",
       "Hong Kong Dollar 港幣"
@@ -428,7 +428,7 @@
   {
     "promotionID": "25GEN016",
     "promotionName": "AEON Waku Waku 本地餐飲 1%",
-    "eligibleCards": [],
+    "eligibleCards": ["AENWAKM"],
     "eligibleCurrency": [
       "Hong Kong Dollar 港幣"
     ],
@@ -455,7 +455,7 @@
   {
     "promotionID": "25GEN017",
     "promotionName": "AEON Waku Waku 日本簽賬 3%",
-    "eligibleCards": [],
+    "eligibleCards": ["AENWAKM"],
     "eligibleCurrency": [
       "Foreign Currency 外幣"
     ],

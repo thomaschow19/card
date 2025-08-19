@@ -128,6 +128,7 @@
 
   <script>
     const state = { issuers: [], cards: [], promos: [], filteredCards: [], filteredPromos: [] };
+    let cardIdToName = new Map();
 
     async function load(path){
       const res = await fetch(path, { cache: "no-store" });
@@ -168,10 +169,20 @@
         return;
       }
       // Collect columns across all rows for stability
-      const cols = Array.from(new Set(rows.flatMap(r => Object.keys(r))));
+      let cols = Array.from(new Set(rows.flatMap(r => Object.keys(r))));
+      // Hide certain columns per table
+      if (el.id === 'tbl-promos') {
+        cols = cols.filter(c => c !== 'promotionID');
+      }
       const thead = "<thead><tr>" + cols.map(c => `<th>${escapeHTML(caps(c))}</th>`).join("") + "</tr></thead>";
       const tbody = "<tbody>" + rows.map(r => {
-        return "<tr>" + cols.map(c => `<td>${valueToHTML(r[c])}</td>`).join("") + "</tr>";
+        return "<tr>" + cols.map(c => {
+          let v = r[c];
+          if (el.id === 'tbl-promos' && c === 'eligibleCards' && Array.isArray(v)) {
+            v = v.map(id => cardIdToName.get(String(id)) || id);
+          }
+          return `<td>${valueToHTML(v)}</td>`;
+        }).join("") + "</tr>";
       }).join("") + "</tbody>";
       el.innerHTML = thead + tbody;
     }
@@ -277,6 +288,12 @@
         ]);
         state.issuers = issuers;
         state.cards   = cards;
+        cardIdToName = new Map();
+        (Array.isArray(cards) ? cards : []).forEach(c => {
+          if (c && c.cardID && c.cardName) {
+            cardIdToName.set(String(c.cardID), String(c.cardName));
+          }
+        });
         state.promos  = promos;
         state.filteredCards  = cards;
         state.filteredPromos = promos;
