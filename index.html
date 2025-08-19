@@ -48,7 +48,8 @@
       background:linear-gradient(0deg,rgba(255,255,255,.02),rgba(255,255,255,.02)),var(--card);
       color:var(--text); outline:none;
     }
-    .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .filters{display:flex;flex-direction:column;gap:10px}
+    .filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
     .select{min-width:260px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(0deg,rgba(255,255,255,.02),rgba(255,255,255,.02)),var(--card);color:var(--text);outline:none}
     .btn-clear{padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);cursor:pointer}
     .btn-clear:active{transform:translateY(1px)}
@@ -113,10 +114,18 @@
       <div class="card">
         <h2>Promotions <span id="promo-count" class="muted"></span></h2>
         <div class="inner filters">
-          <label class="muted">Merchant type:</label>
-          <div id="merchant-chips" class="chips"></div>
-          <button id="merchant-clear" class="btn-clear" type="button">Clear</button>
-          <span class="hint">Tap chips to toggle</span>
+          <div class="filter-row">
+            <label class="muted">Merchant type:</label>
+            <div id="merchant-chips" class="chips"></div>
+          </div>
+          <div class="filter-row">
+            <label class="muted">Eligible Currency:</label>
+            <div id="currency-chips" class="chips"></div>
+          </div>
+          <div class="filter-row">
+            <button id="merchant-clear" class="btn-clear" type="button">Clear</button>
+            <span class="hint">Tap chips to toggle</span>
+          </div>
         </div>
         <div class="inner hint">Quick filter above searches across text in both tables.</div>
         <div class="scroll"><table id="tbl-promos"></table></div>
@@ -163,6 +172,15 @@
       return arr.some(isAnySpendingLabel);
     }
 
+    function isEmptyValue(v){
+      if (v === null || v === undefined) return true;
+      if (typeof v === 'string') return v.trim() === '';
+      if (Array.isArray(v)) return v.length === 0 || v.every(isEmptyValue);
+      if (typeof v === 'object') return Object.keys(v).length === 0; // treat empty object as empty
+      // numbers and booleans are considered meaningful even if 0/false
+      return false;
+    }
+
     function renderTable(el, rows){
       if (!rows || rows.length === 0) {
         el.innerHTML = "<tbody><tr><td class='subtle'>No data</td></tr></tbody>";
@@ -173,6 +191,13 @@
       // Hide certain columns per table
       if (el.id === 'tbl-promos') {
         cols = cols.filter(c => c !== 'promotionID');
+      }
+      // Hide columns where every displayed row has an empty value
+      cols = cols.filter(c => rows.some(r => !isEmptyValue(r[c])));
+      // If everything got filtered out, show a minimal message
+      if (cols.length === 0){
+        el.innerHTML = "<tbody><tr><td class='subtle'>No non-empty fields</td></tr></tbody>";
+        return;
       }
       const thead = "<thead><tr>" + cols.map(c => `<th>${escapeHTML(caps(c))}</th>`).join("") + "</tr></thead>";
       const tbody = "<tbody>" + rows.map(r => {
@@ -216,6 +241,32 @@
       return Array.from(document.querySelectorAll('#merchant-chips .chip[aria-pressed="true"]')).map(el => el.dataset.value);
     }
 
+    function normalizeCurrency(s){
+      // Keep original casing; only trim whitespace
+      return String(s||"").trim();
+    }
+    // Build chips for Eligible Currency only (ignore category)
+    function buildEligibleCurrencyOptions(promos){
+      const all = new Set();
+      (Array.isArray(promos) ? promos : []).forEach(p => {
+        const ec = Array.isArray(p.eligibleCurrency) ? p.eligibleCurrency : [];
+        ec.forEach(c => { const v = normalizeCurrency(c); if(v) all.add(v); });
+      });
+      const list = Array.from(all).sort();
+      const box = document.getElementById('currency-chips');
+      box.innerHTML = '';
+      list.forEach(txt => {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'chip';
+        btn.setAttribute('aria-pressed','false');
+        btn.dataset.value = txt; btn.textContent = txt;
+        box.appendChild(btn);
+      });
+    }
+    function getSelectedEligibleCurrencies(){
+      return Array.from(document.querySelectorAll('#currency-chips .chip[aria-pressed="true"]')).map(el => el.dataset.value);
+    }
+
     function applyFilters(){
       const s = (document.getElementById('q').value || '').trim().toLowerCase();
       const chosen = getSelectedMerchantTypes().map(normalizeType);
@@ -231,6 +282,17 @@
           if (promoHasAnySpending(p)) return true; // Any Spending matches all
           const types = (Array.isArray(p.merchantType) ? p.merchantType : []).map(normalizeType);
           return chosen.some(c => types.includes(c));
+        });
+      }
+
+      // EligibleCurrency filter only (ignore designatedForeignCurrency)
+      const pickedCurrencies = getSelectedEligibleCurrencies().map(normalizeCurrency);
+      if (pickedCurrencies.length){
+        base = base.filter(p => {
+          const ec = (Array.isArray(p.eligibleCurrency) ? p.eligibleCurrency : []).map(normalizeCurrency);
+          if (ec.length === 0) return false;
+          const set = new Set(ec);
+          return pickedCurrencies.some(c => set.has(c));
         });
       }
 
@@ -274,8 +336,16 @@
       btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
       applyFilters();
     });
+    document.getElementById('currency-chips').addEventListener('click', (e)=>{
+      const btn = e.target.closest('.chip');
+      if(!btn) return;
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+      applyFilters();
+    });
     document.getElementById('merchant-clear').addEventListener('click', () => {
       document.querySelectorAll('#merchant-chips .chip[aria-pressed="true"]').forEach(el => el.setAttribute('aria-pressed','false'));
+      document.querySelectorAll('#currency-chips .chip[aria-pressed="true"]').forEach(el => el.setAttribute('aria-pressed','false'));
       applyFilters();
     });
 
@@ -300,6 +370,7 @@
 
         renderTable(document.getElementById('tbl-issuers'), issuers);
         buildMerchantOptions(promos);
+        buildEligibleCurrencyOptions(promos);
         applyFilters();
       }catch(err){
         const wrap = document.querySelector(".wrap");
