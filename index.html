@@ -129,6 +129,27 @@
     .card[data-view="cards"] tbody td:last-child{ border-bottom:none; }
     .card[data-view="cards"] tbody td::before{ content: attr(data-label); flex: 0 0 40%; max-width: 45%; color:var(--muted); font-weight:600; }
     .card[data-view="cards"] tbody td > *{ flex:1 1 auto; }
+    /* Extra-small phones: stack label above value to prevent clipping */
+    @media (max-width: 480px){
+      .card[data-view="cards"] tbody td{ 
+        display:block; 
+        padding:12px 14px; 
+        word-break:break-word; 
+        overflow-wrap:anywhere; 
+      }
+      .card[data-view="cards"] tbody td::before{
+        display:block; 
+        margin-bottom:6px; 
+        flex:none; 
+        max-width:100%;
+      }
+      .card[data-view="cards"] tbody td > *{ 
+        display:block; 
+        width:100%; 
+      }
+      /* Ensure code and long strings wrap nicely on narrow screens */
+      code{white-space:pre-wrap;word-break:break-word}
+    }
     /* Modern switch for Start collapsed */
     .switch{display:inline-flex;align-items:center;position:relative}
     .switch input{position:absolute;opacity:0;width:0;height:0}
