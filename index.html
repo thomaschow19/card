@@ -363,9 +363,37 @@
       const t = normalizeType(s);
       return t.includes("anyspending") || t.includes("任何消費");
     }
+    function promoMerchantTypes(p){
+      return Array.isArray(p?.eligibility?.merchantTypes) ? p.eligibility.merchantTypes : [];
+    }
+    function promoEligibleCurrencies(p){
+      return Array.isArray(p?.eligibility?.currencies?.eligible) ? p.eligibility.currencies.eligible : [];
+    }
     function promoHasAnySpending(p){
-      const arr = Array.isArray(p.merchantType) ? p.merchantType : [];
+      const arr = promoMerchantTypes(p);
       return arr.some(isAnySpendingLabel);
+    }
+
+    function promoToDisplayRow(p){
+      return {
+        promotionName: p.promotionName,
+        eligibleCards: Array.isArray(p?.eligibility?.cardIds) ? p.eligibility.cardIds : [],
+        eligibleCurrency: promoEligibleCurrencies(p),
+        designatedForeignCurrency: Array.isArray(p?.eligibility?.currencies?.designatedForeign) ? p.eligibility.currencies.designatedForeign : [],
+        channels: Array.isArray(p?.eligibility?.channels) ? p.eligibility.channels : [],
+        merchantType: promoMerchantTypes(p),
+        eligiblePaymentMethod: Array.isArray(p?.eligibility?.paymentMethods) ? p.eligibility.paymentMethods : [],
+        rebatePercentageCashback: Number(p?.reward?.cashbackPercentage || 0),
+        rebateDollarPerMile: Number(p?.reward?.dollarPerMile || 0),
+        BeginDate: p?.validity?.start || "",
+        EndDate: p?.validity?.end || "",
+        requirement: Boolean(p?.requirements?.required),
+        requirementDetail: p?.requirements?.detail || "",
+        rebateLimit: Boolean(p?.limits?.hasLimit),
+        rebateLimitDetail: p?.limits?.detail || "",
+        rebateNotes: p?.notes || "",
+        registrationNeeded: Boolean(p?.registration?.required)
+      };
     }
 
     function isEmptyValue(v){
@@ -417,7 +445,7 @@
     function buildMerchantOptions(promos){
       const all = new Set();
       promos.forEach(p => {
-        (Array.isArray(p.merchantType) ? p.merchantType : []).forEach(mt => {
+        promoMerchantTypes(p).forEach(mt => {
           const key = mt && String(mt).trim();
           if(key) all.add(key);
         });
@@ -447,7 +475,7 @@
     function buildEligibleCurrencyOptions(promos){
       const all = new Set();
       (Array.isArray(promos) ? promos : []).forEach(p => {
-        const ec = Array.isArray(p.eligibleCurrency) ? p.eligibleCurrency : [];
+        const ec = promoEligibleCurrencies(p);
         ec.forEach(c => { const v = normalizeCurrency(c); if(v) all.add(v); });
       });
       const list = Array.from(all).sort();
@@ -478,7 +506,7 @@
       if(chosen.length){
         base = base.filter(p => {
           if (promoHasAnySpending(p)) return true; // Any Spending matches all
-          const types = (Array.isArray(p.merchantType) ? p.merchantType : []).map(normalizeType);
+          const types = promoMerchantTypes(p).map(normalizeType);
           return chosen.some(c => types.includes(c));
         });
       }
@@ -487,18 +515,18 @@
       const pickedCurrencies = getSelectedEligibleCurrencies().map(normalizeCurrency);
       if (pickedCurrencies.length){
         base = base.filter(p => {
-          const ec = (Array.isArray(p.eligibleCurrency) ? p.eligibleCurrency : []).map(normalizeCurrency);
+          const ec = promoEligibleCurrencies(p).map(normalizeCurrency);
           if (ec.length === 0) return false;
           const set = new Set(ec);
           return pickedCurrencies.some(c => set.has(c));
         });
       }
 
-      base.sort((a,b)=> (Number(b.rebatePercentageCashback)||0) - (Number(a.rebatePercentageCashback)||0));
+      base.sort((a,b)=> (Number(b?.reward?.cashbackPercentage)||0) - (Number(a?.reward?.cashbackPercentage)||0));
 
       state.filteredPromos = base;
       renderTable(document.getElementById('tbl-cards'), state.filteredCards);
-      renderTable(document.getElementById('tbl-promos'), state.filteredPromos);
+      renderTable(document.getElementById('tbl-promos'), state.filteredPromos.map(promoToDisplayRow));
       setCounts();
     }
 
