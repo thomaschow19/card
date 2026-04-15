@@ -192,6 +192,44 @@
             <div id="currency-chips" class="chips"></div>
           </div>
           <div class="filter-row">
+            <label class="muted" for="promo-card-filter">Card:</label>
+            <select id="promo-card-filter" class="select">
+              <option value="">All cards</option>
+            </select>
+            <label class="muted" for="promo-requirement-filter">Requirement:</label>
+            <select id="promo-requirement-filter" class="select">
+              <option value="">Any</option>
+              <option value="required">Requirement required</option>
+              <option value="not_required">No requirement</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <label class="muted" for="promo-registration-filter">Registration:</label>
+            <select id="promo-registration-filter" class="select">
+              <option value="">Any</option>
+              <option value="required">Registration required</option>
+              <option value="not_required">No registration required</option>
+            </select>
+            <label class="muted" for="promo-status-filter">Status:</label>
+            <select id="promo-status-filter" class="select">
+              <option value="">Any</option>
+              <option value="active">Active now</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <label class="muted" for="promo-sort">Sort:</label>
+            <select id="promo-sort" class="select">
+              <option value="cashback_desc">Cashback (high → low)</option>
+              <option value="cashback_asc">Cashback (low → high)</option>
+              <option value="start_desc">Start date (newest)</option>
+              <option value="start_asc">Start date (oldest)</option>
+              <option value="end_asc">End date (earliest)</option>
+              <option value="name_asc">Promotion name (A → Z)</option>
+            </select>
+          </div>
+          <div class="filter-row">
             <button id="merchant-clear" class="btn-clear" type="button">Clear</button>
             <span class="hint">Tap chips to toggle</span>
           </div>
@@ -375,6 +413,8 @@
     }
 
     function promoToDisplayRow(p){
+      const requirementConditions = Array.isArray(p?.requirements?.conditions) ? p.requirements.conditions : [];
+      const limitCaps = Array.isArray(p?.limits?.caps) ? p.limits.caps : [];
       return {
         promotionName: p.promotionName,
         eligibleCards: Array.isArray(p?.eligibility?.cardIds) ? p.eligibility.cardIds : [],
@@ -389,8 +429,10 @@
         EndDate: p?.validity?.end || "",
         requirement: Boolean(p?.requirements?.required),
         requirementDetail: p?.requirements?.detail || "",
+        requirementConditions,
         rebateLimit: Boolean(p?.limits?.hasLimit),
         rebateLimitDetail: p?.limits?.detail || "",
+        limitCaps,
         rebateNotes: p?.notes || "",
         registrationNeeded: Boolean(p?.registration?.required)
       };
@@ -493,9 +535,59 @@
       return Array.from(document.querySelectorAll('#currency-chips .chip[aria-pressed="true"]')).map(el => el.dataset.value);
     }
 
+    function buildPromoCardOptions(cards){
+      const sel = document.getElementById('promo-card-filter');
+      if(!sel) return;
+      const current = sel.value;
+      const opts = (Array.isArray(cards) ? cards : [])
+        .filter(c => c?.cardID && c?.cardName)
+        .sort((a,b) => String(a.cardName).localeCompare(String(b.cardName)));
+      sel.innerHTML = '<option value=\"\">All cards</option>' + opts.map(c => {
+        const label = `${c.cardName} (${c.cardID})`;
+        return `<option value=\"${escapeHTML(String(c.cardID))}\">${escapeHTML(label)}</option>`;
+      }).join('');
+      if(Array.from(sel.options).some(o => o.value === current)) sel.value = current;
+    }
+
+    function promoStatus(p){
+      const now = new Date();
+      const start = new Date(p?.validity?.start || 0);
+      const end = new Date(p?.validity?.end || 0);
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 'unknown';
+      if (end < now) return 'expired';
+      if (start > now) return 'upcoming';
+      return 'active';
+    }
+
+    function sortPromos(promos, sortKey){
+      const cp = [...promos];
+      const byNum = (fn, dir=1) => cp.sort((a,b)=>(fn(a)-fn(b))*dir);
+      const byDate = (fn, dir=1) => cp.sort((a,b)=>((new Date(fn(a))).getTime() - (new Date(fn(b))).getTime())*dir);
+      switch(sortKey){
+        case 'cashback_asc':
+          return byNum(p=>Number(p?.reward?.cashbackPercentage)||0, 1);
+        case 'start_desc':
+          return byDate(p=>p?.validity?.start || 0, -1);
+        case 'start_asc':
+          return byDate(p=>p?.validity?.start || 0, 1);
+        case 'end_asc':
+          return byDate(p=>p?.validity?.end || 0, 1);
+        case 'name_asc':
+          return cp.sort((a,b)=>String(a?.promotionName||'').localeCompare(String(b?.promotionName||'')));
+        case 'cashback_desc':
+        default:
+          return byNum(p=>Number(p?.reward?.cashbackPercentage)||0, -1);
+      }
+    }
+
     function applyFilters(){
       const s = (document.getElementById('q').value || '').trim().toLowerCase();
       const chosen = getSelectedMerchantTypes().map(normalizeType);
+      const selectedCardId = (document.getElementById('promo-card-filter')?.value || '').trim();
+      const requirementFilter = (document.getElementById('promo-requirement-filter')?.value || '').trim();
+      const registrationFilter = (document.getElementById('promo-registration-filter')?.value || '').trim();
+      const statusFilter = (document.getElementById('promo-status-filter')?.value || '').trim();
+      const sortKey = (document.getElementById('promo-sort')?.value || 'cashback_desc').trim();
 
       // Cards filter (text only)
       state.filteredCards = !s ? state.cards : state.cards.filter(r => JSON.stringify(r).toLowerCase().includes(s));
@@ -522,7 +614,24 @@
         });
       }
 
-      base.sort((a,b)=> (Number(b?.reward?.cashbackPercentage)||0) - (Number(a?.reward?.cashbackPercentage)||0));
+      if(selectedCardId){
+        base = base.filter(p => (Array.isArray(p?.eligibility?.cardIds) ? p.eligibility.cardIds : []).includes(selectedCardId));
+      }
+      if(requirementFilter === 'required'){
+        base = base.filter(p => Boolean(p?.requirements?.required));
+      }else if(requirementFilter === 'not_required'){
+        base = base.filter(p => !Boolean(p?.requirements?.required));
+      }
+      if(registrationFilter === 'required'){
+        base = base.filter(p => Boolean(p?.registration?.required));
+      }else if(registrationFilter === 'not_required'){
+        base = base.filter(p => !Boolean(p?.registration?.required));
+      }
+      if(statusFilter){
+        base = base.filter(p => promoStatus(p) === statusFilter);
+      }
+
+      base = sortPromos(base, sortKey);
 
       state.filteredPromos = base;
       renderTable(document.getElementById('tbl-cards'), state.filteredCards);
@@ -555,6 +664,8 @@
     });
 
     document.getElementById('q').addEventListener('input', () => applyFilters());
+    ['promo-card-filter','promo-requirement-filter','promo-registration-filter','promo-status-filter','promo-sort']
+      .forEach(id => document.getElementById(id).addEventListener('change', applyFilters));
     document.getElementById('merchant-chips').addEventListener('click', (e)=>{
       const btn = e.target.closest('.chip');
       if(!btn) return;
@@ -572,6 +683,11 @@
     document.getElementById('merchant-clear').addEventListener('click', () => {
       document.querySelectorAll('#merchant-chips .chip[aria-pressed="true"]').forEach(el => el.setAttribute('aria-pressed','false'));
       document.querySelectorAll('#currency-chips .chip[aria-pressed="true"]').forEach(el => el.setAttribute('aria-pressed','false'));
+      document.getElementById('promo-card-filter').value = '';
+      document.getElementById('promo-requirement-filter').value = '';
+      document.getElementById('promo-registration-filter').value = '';
+      document.getElementById('promo-status-filter').value = '';
+      document.getElementById('promo-sort').value = 'cashback_desc';
       applyFilters();
     });
 
@@ -597,6 +713,7 @@
         renderTable(document.getElementById('tbl-issuers'), issuers);
         buildMerchantOptions(promos);
         buildEligibleCurrencyOptions(promos);
+        buildPromoCardOptions(cards);
         applyFilters();
       }catch(err){
         const wrap = document.querySelector(".wrap");

@@ -38,11 +38,32 @@
     },
     "requirements": {
       "required": true,
-      "detail": "該曆月該卡累積滿 HK$1,500"
+      "detail": "該曆月該卡累積滿 HK$1,500",
+      "conditions": [
+        {
+          "type": "minimum_spend",
+          "metric": "spend_amount",
+          "operator": ">=",
+          "value": 1500,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_card"
+        }
+      ]
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月每卡簽5556"
+      "detail": "每曆月每卡簽5556",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 5556,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_card"
+        }
+      ]
     },
     "registration": {
       "required": true
@@ -85,11 +106,43 @@
     },
     "requirements": {
       "required": true,
-      "detail": "該筆網上交易需>500, 該月非網上累計簽夠1000"
+      "detail": "該筆網上交易需>500, 該月非網上累計簽夠1000",
+      "conditions": [
+        {
+          "type": "minimum_transaction_amount",
+          "metric": "spend_amount",
+          "operator": ">",
+          "value": 500,
+          "unit": "HKD",
+          "period": "per_transaction",
+          "scope": "eligible_transaction",
+          "channel": "online"
+        },
+        {
+          "type": "minimum_spend",
+          "metric": "spend_amount",
+          "operator": ">=",
+          "value": 1000,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_card",
+          "channelExclusion": "online"
+        }
+      ]
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月總上限簽2500"
+      "detail": "每曆月總上限簽2500",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 2500,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "combined_campaign"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -131,11 +184,33 @@
     },
     "requirements": {
       "required": true,
-      "detail": "該月非網上累計簽夠1000"
+      "detail": "該月非網上累計簽夠1000",
+      "conditions": [
+        {
+          "type": "minimum_spend",
+          "metric": "spend_amount",
+          "operator": ">=",
+          "value": 1000,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_card",
+          "channelExclusion": "online"
+        }
+      ]
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月總上限簽2500"
+      "detail": "每曆月總上限簽2500",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 2500,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "combined_campaign"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -180,11 +255,32 @@
     },
     "requirements": {
       "required": true,
-      "detail": "該結單總計簽夠4000"
+      "detail": "該結單總計簽夠4000",
+      "conditions": [
+        {
+          "type": "minimum_spend",
+          "metric": "spend_amount",
+          "operator": ">=",
+          "value": 4000,
+          "unit": "HKD",
+          "period": "billing_cycle",
+          "scope": "per_card_family"
+        }
+      ]
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月上限簽5000"
+      "detail": "每曆月上限簽5000",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 5000,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_card"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -229,11 +325,13 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": false,
-      "detail": "無上限"
+      "detail": "無上限",
+      "caps": []
     },
     "registration": {
       "required": false
@@ -279,11 +377,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆年總上限簽150k"
+      "detail": "每曆年總上限簽150k",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 150000,
+          "unit": "HKD",
+          "period": "calendar_year",
+          "scope": "combined_campaign"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -325,11 +434,32 @@
     },
     "requirements": {
       "required": true,
-      "detail": "該曆月所有citi卡累積滿4000"
+      "detail": "該曆月所有citi卡累積滿4000",
+      "conditions": [
+        {
+          "type": "minimum_spend",
+          "metric": "spend_amount",
+          "operator": ">=",
+          "value": 4000,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "issuer_portfolio"
+        }
+      ]
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月2000"
+      "detail": "每曆月2000",
+      "caps": [
+        {
+          "type": "maximum_reward_amount",
+          "metric": "reward_amount",
+          "maxValue": 2000,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_card"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -376,11 +506,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆季上限簽10k"
+      "detail": "每曆季上限簽10k",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 10000,
+          "unit": "HKD",
+          "period": "calendar_quarter",
+          "scope": "per_card"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -425,11 +566,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆季上限簽10k等值外幣"
+      "detail": "每曆季上限簽10k等值外幣",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 10000,
+          "unit": "HKD_equivalent",
+          "period": "calendar_quarter",
+          "scope": "per_card"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -474,11 +626,13 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": false,
-      "detail": "無上限"
+      "detail": "無上限",
+      "caps": []
     },
     "registration": {
       "required": false
@@ -523,11 +677,13 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": false,
-      "detail": "無上限"
+      "detail": "無上限",
+      "caps": []
     },
     "registration": {
       "required": false
@@ -571,11 +727,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月每類上限簽$1,786"
+      "detail": "每曆月每類上限簽$1,786",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 1786,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_category"
+        }
+      ]
     },
     "registration": {
       "required": true
@@ -619,11 +786,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月每類上限簽$1,786"
+      "detail": "每曆月每類上限簽$1,786",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 1786,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_category"
+        }
+      ]
     },
     "registration": {
       "required": true
@@ -667,11 +845,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每曆月每類上限簽$1,923"
+      "detail": "每曆月每類上限簽$1,923",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 1923,
+          "unit": "HKD",
+          "period": "calendar_month",
+          "scope": "per_category"
+        }
+      ]
     },
     "registration": {
       "required": true
@@ -714,11 +903,22 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每結單$3571"
+      "detail": "每結單$3571",
+      "caps": [
+        {
+          "type": "maximum_eligible_spend",
+          "metric": "spend_amount",
+          "maxValue": 3571,
+          "unit": "HKD",
+          "period": "billing_cycle",
+          "scope": "per_card"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -760,11 +960,23 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每結單額外獎賞$200"
+      "detail": "每結單額外獎賞$200",
+      "caps": [
+        {
+          "type": "maximum_reward_amount",
+          "metric": "reward_amount",
+          "maxValue": 200,
+          "unit": "HKD",
+          "period": "billing_cycle",
+          "scope": "per_card",
+          "rewardComponent": "bonus_reward"
+        }
+      ]
     },
     "registration": {
       "required": false
@@ -811,11 +1023,23 @@
     },
     "requirements": {
       "required": false,
-      "detail": "無優惠要求"
+      "detail": "無優惠要求",
+      "conditions": []
     },
     "limits": {
       "hasLimit": true,
-      "detail": "每結單額外獎賞$200"
+      "detail": "每結單額外獎賞$200",
+      "caps": [
+        {
+          "type": "maximum_reward_amount",
+          "metric": "reward_amount",
+          "maxValue": 200,
+          "unit": "HKD",
+          "period": "billing_cycle",
+          "scope": "per_card",
+          "rewardComponent": "bonus_reward"
+        }
+      ]
     },
     "registration": {
       "required": false
